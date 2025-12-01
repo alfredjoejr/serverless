@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Time & Day State | Glassmorphism</title>
+    <style>
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            /* Slightly warmer/cooler animated gradient base */
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 25%, #a1c4fd 50%, #c2e9fb 75%, #d4fc79 100%);
+            background-size: 300% 300%;
+            animation: gradientMove 15s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            padding: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        /* --- Glass Card Style --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2); /* Slightly more transparent */
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            backdrop-filter: blur(20px) saturate(110%); /* Increased blur and subtle saturation pop */
+            -webkit-backdrop-filter: blur(20px) saturate(110%);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 340px; /* Slightly wider to accommodate icons */
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- Typography & Layout --- */
+        .city-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(0, 0, 0, 0.7);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        /* Flex container for time and icon */
+        .time-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            gap: 15px; /* Space between icon and time */
+        }
+
+        .time-display {
+            font-size: 3.2rem;
+            font-weight: 300;
+            color: #1d1d1f;
+            white-space: nowrap;
+        }
+
+        .date-display {
+            font-size: 1.1rem;
+            color: rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+        }
+
+        /* --- Icon Styles --- */
+        .day-state-icon {
+            width: 36px;
+            height: 36px;
+            /* Default color, will be overridden by specific icon styles */
+            fill: rgba(0,0,0,0.7); 
+            transition: opacity 0.5s ease;
+        }
+        
+        .sun-icon { color: #FF9500; /* Warm Apple yellow/orange */ }
+        .moon-icon { color: #5E5CE6; /* Cool Apple indigo/blue */ }
+
+        /* Utility class to hide icons */
+        .hidden {
+            display: none;
+            opacity: 0;
+        }
+
+         .back-btn {
+            position: absolute; top: 20px; left: 20px; padding: 10px 20px;
+            background: rgba(255,255,255,0.3); backdrop-filter: blur(10px);
+            border-radius: 20px; text-decoration: none; color: #333; font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.4); transition: 0.2s; z-index: 10;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.5); }
+        /* --- Floating Background Orbs --- */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: 0;
+            opacity: 0.6;
+        }
+        .orb-1 { width: 400px; height: 400px; background: #fda085; top: -100px; left: -100px; animation: float 8s ease-in-out infinite alternate; }
+        .orb-2 { width: 350px; height: 350px; background: #a1c4fd; bottom: -80px; right: -80px; animation: float 10s ease-in-out infinite alternate-reverse; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <a href="../../index.html" class="back-btn">← Dashboard</a>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="container">
+        <div class="glass-card">
+            <div class="city-label">Colombo, LK</div>
+            
+            <div class="time-wrapper">
+                 <svg class="day-state-icon sun-icon hidden" id="sun-lk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+                  </svg>
+                  <svg class="day-state-icon moon-icon hidden" id="moon-lk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" />
+                  </svg>
+                <div class="time-display" id="time-lk">--:--</div>
+            </div>
+            <div class="date-display" id="date-lk">Loading...</div>
+        </div>
+
+        <div class="glass-card">
+            <div class="city-label">London, UK</div>
+            <div class="time-wrapper">
+                 <svg class="day-state-icon sun-icon hidden" id="sun-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+                  </svg>
+                  <svg class="day-state-icon moon-icon hidden" id="moon-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" />
+                  </svg>
+                <div class="time-display" id="time-uk">--:--</div>
+            </div>
+            <div class="date-display" id="date-uk">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        // Helper function to get the numeric hour (0-23) for a specific timezone
+        function getHourInTimeZone(dateObj, timeZone) {
+             // We use Intl.DateTimeFormat to reliably extract the hour in 24h format relative to the timezone
+            const formatter = new Intl.DateTimeFormat('en-US', {
+                timeZone: timeZone,
+                hour: 'numeric',
+                hourCycle: 'h23' // Ensures 0-23 format
+            });
+            const parts = formatter.formatToParts(dateObj);
+            const hourPart = parts.find(part => part.type === 'hour');
+            return parseInt(hourPart.value, 10);
+        }
+
+        // Function to toggle sun/moon icons based on hour
+        function updateIconState(hour, sunId, moonId) {
+            const sunEl = document.getElementById(sunId);
+            const moonEl = document.getElementById(moonId);
+
+            // Define "Daytime" as 6 AM (06:00) inclusive up to 6 PM (18:00) exclusive.
+            // Adjust these numbers if you prefer different day/night thresholds.
+            const isDaytime = hour >= 6 && hour < 18;
+
+            if (isDaytime) {
+                sunEl.classList.remove('hidden');
+                moonEl.classList.add('hidden');
+            } else {
+                sunEl.classList.add('hidden');
+                moonEl.classList.remove('hidden');
+            }
+        }
+
+        function updateTimeAndIcons() {
+            const now = new Date();
+
+            const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+            // --- Sri Lanka (Asia/Colombo) ---
+            const tzLK = 'Asia/Colombo';
+            const timeLK = now.toLocaleTimeString('en-US', { ...timeOptions, timeZone: tzLK });
+            const dateLK = now.toLocaleDateString('en-US', { ...dateOptions, timeZone: tzLK });
+            const hourLK = getHourInTimeZone(now, tzLK);
+
+            // --- London (Europe/London) ---
+            const tzUK = 'Europe/London';
+            const timeUK = now.toLocaleTimeString('en-US', { ...timeOptions, timeZone: tzUK });
+            const dateUK = now.toLocaleDateString('en-US', { ...dateOptions, timeZone: tzUK });
+            const hourUK = getHourInTimeZone(now, tzUK);
+
+            // Update DOM Text
+            document.getElementById('time-lk').textContent = timeLK;
+            document.getElementById('date-lk').textContent = dateLK;
+            document.getElementById('time-uk').textContent = timeUK;
+            document.getElementById('date-uk').textContent = dateUK;
+
+            // Update Icon States
+            updateIconState(hourLK, 'sun-lk', 'moon-lk');
+            updateIconState(hourUK, 'sun-uk', 'moon-uk');
+        }
+
+        // Update immediately on load, then every second
+        updateTimeAndIcons();
+        setInterval(updateTimeAndIcons, 1000);
+    </script>
+</body>
+</html>
