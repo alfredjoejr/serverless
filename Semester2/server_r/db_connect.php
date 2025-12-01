@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "glassos_admin"; // New username
-$password = "securepass123"; // New password
-$dbname = "glassos_db";
+$servername = " sql100.infinityfree.com";
+$username = "if0_40468079"; // New username
+$password = "AndJL35oTZA"; // New password
+$dbname = " if0_40468079_glassos_db ";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

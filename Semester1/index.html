@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlassOS Dashboard</title>
+    <style>
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(120deg, #ff9a9e 0%, #fecfef 20%, #a1c4fd 40%, #c2e9fb 60%, #e0c3fc 80%, #8ec5fc 100%);
+            background-size: 300% 300%;
+            animation: gradientMove 12s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Header Clock Styles --- */
+        .clock-header {
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 50px;
+            z-index: 2;
+            cursor: pointer;
+            transition: transform 0.2s;
+
+            /* Added Glass Background for Readability */
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 20px 50px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        .clock-header:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .header-time {
+            font-size: 4rem;
+            font-weight: 200;
+            color: #1d1d1f; /* Changed to dark text for better contrast on glass */
+            text-shadow: none; /* Removed shadow for cleaner look on glass */
+            line-height: 1;
+        }
+
+        .header-date {
+            font-size: 1.2rem;
+            color: rgba(0, 0, 0, 0.7); /* Darker text */
+            font-weight: 500;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- Grid Container --- */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            z-index: 2;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        /* --- Glass App Button/Card --- */
+        .app-card {
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.2s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .app-card:active {
+            transform: scale(0.95);
+        }
+
+        .app-icon {
+            width: 56px;
+            height: 56px;
+            margin-bottom: 15px;
+            color: #1d1d1f;
+            fill: currentColor;
+        }
+
+        .app-name {
+            color: #1d1d1f;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        /* --- Orbs for depth --- */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.8;
+        }
+        .orb-1 { width: 300px; height: 300px; background: #ff9a9e; top: 10%; left: 20%; animation: float 6s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: #a1c4fd; bottom: 10%; right: 20%; animation: float 8s ease-in-out infinite reverse; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(20px, 40px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+            .app-card {
+                aspect-ratio: auto;
+                padding: 30px;
+            }
+            .header-time { font-size: 3rem; }
+            .clock-header { padding: 20px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <a href="Utilities/Clock/clock.html" class="clock-header">
+        <div class="header-time" id="dashboard-time">--:--</div>
+        <div class="header-date" id="dashboard-date">Loading...</div>
+    </a>
+
+    <div class="app-grid">
+        
+        <a href="Semester1/index.php" class="app-card">
+            <svg class="app-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span class="app-name">Semester 1</span>
+        </a>
+
+        <a href="Semester2/index.php" class="app-card">
+            <svg class="app-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span class="app-name">Semester 2</span>
+        </a>
+
+    </div>
+        
+    <h1 style="font-size: small; margin-top: 40px;">Designed & Developed By <a href="https://www.instagram.com/alfredjoejr">Alfred Joe Jr</a></h1>
+
+
+    <script>
+        function updateDashboardClock() {
+            const now = new Date();
+            
+            // Update Time
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            document.getElementById('dashboard-time').textContent = timeString;
+
+            // Update Date
+            const dateString = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'short',
+                day: 'numeric'
+            });
+            document.getElementById('dashboard-date').textContent = dateString;
+        }
+
+        setInterval(updateDashboardClock, 1000);
+        updateDashboardClock();
+    </script>
+</body>
+</html>
