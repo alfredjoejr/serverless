@@ -2,13 +2,9 @@
 session_start();
 require_once 'db_connect.php';
 
-// --- CONFIGURATION: PASTE YOUR GOOGLE DRIVE LINK HERE ---
-$drive_link = "https://drive.google.com/drive/u/0/folders/YOUR_DRIVE_ID_HERE"; 
-// --------------------------------------------------------
-
-// If already logged in, go straight to the Drive link
+// If already logged in, go to the main index page
 if (isset($_SESSION['sem1_user_id'])) {
-    header("Location: " . $drive_link);
+    header("Location: ../index.php");
     exit;
 }
 
@@ -18,8 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $_POST['username'];
     $pass = $_POST['password'];
 
-    // Using the same 'users' table as Semester 2
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id, password FROM semOne WHERE username = ?");
     $stmt->bind_param("s", $user);
     $stmt->execute();
     $stmt->store_result();
@@ -29,11 +24,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->fetch();
 
         if (password_verify($pass, $hashed_password)) { 
-            // SET UNIQUE SESSION FOR SEMESTER 1
+            // Set unique session for Semester 1
             $_SESSION['sem1_user_id'] = $id;
-            
-            // Redirect to Google Drive
-            header("Location: " . $drive_link);
+            // Redirect to the intermediate page
+            header("Location: ../index.php");
             exit;
         } else {
             $error = "Invalid password.";
@@ -58,7 +52,6 @@ $conn->close();
         body {
             height: 100vh; width: 100vw; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; overflow: hidden;
-            /* Using the Semester 1 Theme Colors */
             background: linear-gradient(120deg, #ff9a9e 0%, #fecfef 20%, #a1c4fd 40%, #c2e9fb 60%, #e0c3fc 80%, #8ec5fc 100%);
             background-size: 300% 300%; animation: gradientMove 12s ease infinite;
         }

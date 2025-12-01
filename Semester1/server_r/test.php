@@ -2,14 +2,14 @@
 require_once 'db_connect.php';
 
 // 1. The password you want to use
-$new_password = 'password123'; 
+$new_password = 'DJGeQfQ6&RUrFHFnn*gKGa&7#f%gDPc21zDT!3'; 
 
 // 2. Generate a secure hash
 $new_hash = password_hash($new_password, PASSWORD_DEFAULT);
 
 // 3. Update the database
 $username = 'student';
-$stmt = $conn->prepare("UPDATE users SET password = ? WHERE username = ?");
+$stmt = $conn->prepare("UPDATE semOne SET password = ? WHERE username = ?");
 $stmt->bind_param("ss", $new_hash, $username);
 
 if ($stmt->execute()) {
