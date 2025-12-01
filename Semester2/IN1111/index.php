@@ -1,3 +1,13 @@
+<?php
+// --- AUTHENTICATION CHECK ---
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    // If not logged in, redirect to login page
+    header("Location: ../server_r/login.php");
+    exit;
+}
+// ----------------------------
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
