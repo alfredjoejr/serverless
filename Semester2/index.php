@@ -1,3 +1,13 @@
+<?php
+// --- AUTHENTICATION CHECK ---
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    // If not logged in, redirect to login page
+    header("Location: server_r/login.php");
+    exit;
+}
+// ----------------------------
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,14 +27,19 @@
         }
         @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* --- Back Button --- */
-        .back-btn {
-            position: absolute; top: 20px; left: 20px; padding: 10px 20px;
+        /* --- Navigation Buttons --- */
+        .nav-btn {
+            position: absolute; top: 20px; padding: 10px 20px;
             background: rgba(255,255,255,0.3); backdrop-filter: blur(10px);
             border-radius: 20px; text-decoration: none; color: #333; font-weight: 600;
             border: 1px solid rgba(255,255,255,0.4); transition: 0.2s; z-index: 10;
+            font-size: 0.9rem;
         }
-        .back-btn:hover { background: rgba(255,255,255,0.5); transform: translateY(-2px); }
+        .nav-btn:hover { background: rgba(255,255,255,0.5); transform: translateY(-2px); }
+        
+        .back-btn { left: 20px; }
+        .logout-btn { right: 20px; background: rgba(255, 80, 80, 0.2); color: #8b0000; }
+        .logout-btn:hover { background: rgba(255, 80, 80, 0.4); }
 
         /* --- Main Container --- */
         .container {
@@ -60,15 +75,13 @@
 
         .file-info { display: flex; align-items: center; gap: 15px; }
         .file-icon { width: 24px; height: 24px; opacity: 0.7; color: #333; }
-        .folder-icon { color: #007AFF; } /* Blue for folders */
+        .folder-icon { color: #007AFF; }
         
         .download-icon { 
             background: #007AFF; color: white; border-radius: 50%; 
             padding: 8px; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;
             font-size: 14px;
         }
-        
-        /* Different style for folder "enter" arrow */
         .enter-icon { background: rgba(0,0,0,0.1); color: #333; }
 
         .orb { position: absolute; border-radius: 50%; filter: blur(90px); z-index: -1; opacity: 0.6; }
@@ -78,7 +91,8 @@
 </head>
 <body>
 
-    <a href="../index.html" class="back-btn">← Dashboard</a>
+    <a href="../index.html" class="nav-btn back-btn">← Dashboard</a>
+    <a href="server_r/logout.php" class="nav-btn logout-btn">Logout</a>
     
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
@@ -87,31 +101,21 @@
         <h2>Folder Resources</h2> 
 
         <?php
-        // 1. Get current directory
         $dir = __DIR__;
-        
-        // 2. Scan for files
         $files = scandir($dir);
-        
-        // 3. Files to ignore
-        $ignore = array('.', '..', 'index.php', '.DS_Store', 'error_log');
+        // Added db_connect.php, login.php, logout.php to ignore list so they don't show in the UI
+        $ignore = array('.', '..', 'index.php', '.DS_Store', 'error_log', 'db_connect.php', 'login.php', 'logout.php');
 
-        // 4. Loop through files
         foreach ($files as $file) {
             if (!in_array($file, $ignore)) {
-                
-                // Determine if it's a sub-folder
                 $isDir = is_dir($dir . '/' . $file);
                 
-                // Set Icon Logic
                 if ($isDir) {
-                    // Folder Icon
                     $iconSvg = '<svg class="file-icon folder-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>';
                     $actionIcon = '<div class="download-icon enter-icon">→</div>';
-                    $downloadAttr = ''; // Folders don't download, they open
-                    $link = $file . '/index.php'; // Assuming folders have an index inside, or just link to folder
+                    $downloadAttr = '';
+                    $link = $file . '/index.php';
                 } else {
-                    // File Icon
                     $iconSvg = '<svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>';
                     $actionIcon = '<div class="download-icon">↓</div>';
                     $downloadAttr = 'download';
@@ -130,7 +134,6 @@
             }
         }
         
-        // Optional: Message if empty
         if (count($files) <= count($ignore)) {
             echo '<div style="text-align:center; opacity:0.6; padding:20px;">No files found in this folder.</div>';
         }
